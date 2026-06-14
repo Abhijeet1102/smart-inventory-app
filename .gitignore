@@ -1,0 +1,22 @@
+# IDEs and Editors
+.idea/
+.vscode/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.DS_Store
+*.env
+
+# Builds
+target/
+node_modules/
+dist/
+build/
+*.log
+
+# Temp
+tmp/
+temp/
