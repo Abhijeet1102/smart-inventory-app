@@ -76,32 +76,33 @@ const Dashboard = () => {
     return (
         <div className="max-w-7xl mx-auto pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             
-            {/* 1. User Profile Section */}
+            {/* 1. User Profile Section - Compact */}
             {user && (
-                <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-2xl p-5 text-white shadow-md relative overflow-hidden">
                     {/* Decorative Background Elements */}
-                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white opacity-5 blur-3xl"></div>
-                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-500 opacity-10 blur-3xl"></div>
+                    <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 rounded-full bg-white opacity-5 blur-2xl"></div>
                     
-                    <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-8">
+                    <div className="relative z-10 flex flex-row items-center gap-5">
                         {/* Avatar */}
-                        <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-md border-4 border-white/30 flex items-center justify-center text-4xl font-extrabold shadow-lg shrink-0">
+                        <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center text-2xl font-extrabold shadow-sm shrink-0">
                             {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                         </div>
                         
                         {/* Details */}
-                        <div className="flex-1 text-center md:text-left">
-                            <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2 justify-center md:justify-start">
-                                <h1 className="text-3xl font-extrabold tracking-tight">{user.name}</h1>
-                                <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                                    <ShieldCheck size={14} /> {user.role || 'STANDARD'}
-                                </span>
+                        <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between">
+                            <div>
+                                <div className="flex items-center gap-3 mb-0.5">
+                                    <h1 className="text-xl font-bold tracking-tight">{user.name}</h1>
+                                    <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                        <ShieldCheck size={10} /> {user.role || 'STANDARD'}
+                                    </span>
+                                </div>
+                                <p className="text-blue-200 text-sm font-medium">Welcome back!</p>
                             </div>
-                            <p className="text-blue-200 mb-6 font-medium">Welcome back to your Inventory Command Center.</p>
                             
-                            <div className="flex flex-col md:flex-row gap-4">
-                                <div className="flex items-center justify-center md:justify-start gap-2 text-sm text-blue-100 bg-white/10 rounded-xl py-2 px-4 backdrop-blur-sm w-max">
-                                    <MapPin size={16} className="text-blue-300" />
+                            <div className="mt-2 md:mt-0">
+                                <div className="flex items-center gap-1.5 text-xs text-blue-100 bg-white/10 rounded-lg py-1 px-3 backdrop-blur-sm w-max">
+                                    <MapPin size={14} className="text-blue-300" />
                                     <span className="truncate">{user.address || 'No Address Provided'}</span>
                                 </div>
                             </div>
