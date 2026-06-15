@@ -247,7 +247,7 @@ const ManageProducts = () => {
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 
                 {/* Left Column: Form */}
-                <div className="xl:col-span-1 sticky top-24 self-start space-y-6">
+                <div className="xl:col-span-1 space-y-6">
                     <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
                         <div className="flex items-center gap-3 mb-4 border-b pb-3">
                             <div className={`p-2 rounded-xl text-white shadow-md ${editingId ? 'bg-gradient-to-br from-amber-400 to-orange-500' : 'bg-gradient-to-br from-indigo-500 to-purple-600'}`}>
@@ -388,7 +388,7 @@ const ManageProducts = () => {
                 </div>
 
                 {/* Right Column: List */}
-                <div className="xl:col-span-2 sticky top-24 self-start">
+                <div className="xl:col-span-2">
                     <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[660px]">
                         
                         {/* List Header with Search */}
