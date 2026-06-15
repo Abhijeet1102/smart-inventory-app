@@ -36,19 +36,30 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
         setIsLoading(true);
         try {
-            const [productsRes, customersRes, ordersRes] = await Promise.all([
+            const [categoriesRes, productsRes, customersRes, ordersRes] = await Promise.all([
+                api.get('/categories'),
                 api.get('/products'),
                 api.get('/customers'),
                 api.get('/orders')
             ]);
 
+            const categories = categoriesRes.data || [];
             const products = productsRes.data || [];
             const customers = customersRes.data || [];
             const orders = ordersRes.data || [];
 
+            // Map category names
+            const categoryMap = {};
+            categories.forEach(c => categoryMap[c.id] = c.name);
+            
+            const productsWithCategories = products.map(p => ({
+                ...p,
+                categoryName: categoryMap[p.categoryId] || 'Uncategorized'
+            }));
+
             // Calculate metrics
             const revenue = orders.reduce((sum, order) => sum + (order.totalPaid || 0), 0);
-            const sortedProducts = [...products].sort((a, b) => a.quantity - b.quantity);
+            const sortedProducts = [...productsWithCategories].sort((a, b) => a.quantity - b.quantity);
 
             setStats({
                 totalProducts: products.length,
@@ -196,12 +207,12 @@ const Dashboard = () => {
                                 {stats.allProducts?.map(product => (
                                     <li key={product.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
                                         <div className="flex items-center gap-4">
-                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs ${product.quantity < 10 ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
-                                                ID: {product.id}
+                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg shadow-sm ${product.quantity < 10 ? 'bg-red-100 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
+                                                {product.name ? product.name.charAt(0).toUpperCase() : 'P'}
                                             </div>
                                             <div>
                                                 <p className="font-bold text-gray-900">{product.name}</p>
-                                                <p className="text-xs text-gray-500">Category: {product.category?.name || 'Uncategorized'}</p>
+                                                <p className="text-xs text-gray-500">Category: {product.categoryName}</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
