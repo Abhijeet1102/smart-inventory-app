@@ -20,6 +20,7 @@ const ManageOrders = () => {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [paymentStep, setPaymentStep] = useState('SELECT'); // 'SELECT', 'CASH', 'UPI', 'CARD'
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+    const [merchantUpiId, setMerchantUpiId] = useState('');
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
     const [customerSearch, setCustomerSearch] = useState('');
@@ -616,16 +617,35 @@ const ManageOrders = () => {
                             {/* UPI VIEW */}
                             {paymentStep === 'UPI' && (
                                 <div className="animate-in fade-in slide-in-from-right-4 duration-300 text-center">
-                                    <p className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wider">Scan to Pay</p>
-                                    <div className="bg-white p-2 border-2 border-dashed border-gray-300 rounded-2xl inline-block mb-6 relative">
-                                        {/* Dynamic QR Code embedding the amount */}
-                                        <img 
-                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=store@upi&pn=InventoryStore&am=${calculateTotal()}&cu=INR`} 
-                                            alt="UPI QR Code" 
-                                            className="w-48 h-48 rounded-xl"
+                                    <div className="mb-4 text-left">
+                                        <label className="block text-gray-700 text-sm font-bold mb-1">Receiver UPI ID</label>
+                                        <input 
+                                            type="text" 
+                                            value={merchantUpiId}
+                                            onChange={(e) => setMerchantUpiId(e.target.value)}
+                                            placeholder="e.g. mobilenumber@upi"
+                                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-50"
                                         />
                                     </div>
-                                    <p className="text-gray-500 text-sm mb-8 px-4 font-medium">Ask the customer to scan this QR code with any UPI app (GPay, PhonePe, Paytm).</p>
+                                    
+                                    <p className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wider">Scan to Pay</p>
+                                    
+                                    {merchantUpiId.trim() ? (
+                                        <>
+                                            <div className="bg-white p-2 border-2 border-dashed border-gray-300 rounded-2xl inline-block mb-4 relative">
+                                                <img 
+                                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=${encodeURIComponent(merchantUpiId)}&pn=InventoryStore&am=${calculateTotal()}&cu=INR`} 
+                                                    alt="UPI QR Code" 
+                                                    className="w-48 h-48 rounded-xl"
+                                                />
+                                            </div>
+                                            <p className="text-gray-500 text-sm mb-6 px-4 font-medium">Ask the customer to scan this QR code to pay ₹{calculateTotal().toLocaleString()} directly to {merchantUpiId}</p>
+                                        </>
+                                    ) : (
+                                        <div className="w-48 h-48 border-2 border-dashed border-gray-200 bg-gray-50 rounded-2xl mx-auto mb-6 flex items-center justify-center text-gray-400 p-4 text-sm font-medium">
+                                            Please enter a UPI ID above to generate the QR Code.
+                                        </div>
+                                    )}
                                     <div className="flex gap-3">
                                         <button onClick={() => setPaymentStep('SELECT')} className="px-4 py-3 text-gray-500 font-bold hover:bg-gray-100 rounded-xl transition-colors">Back</button>
                                         <button onClick={handleConfirmPayment} disabled={isProcessingPayment} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold shadow-md flex justify-center items-center gap-2 transition-all">
