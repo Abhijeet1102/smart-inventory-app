@@ -23,14 +23,16 @@ const Login = () => {
             if (isLogin) {
                 // Login Flow
                 const response = await api.post('/auth/login', { email, password });
-                localStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                localStorage.setItem('token', response.data.token);
                 navigate('/');
             } else {
                 // Signup Flow
                 const payload = { name, email, mobileNumber, address, password };
                 const response = await api.post('/auth/signup', payload);
                 // After successful signup, log them in automatically
-                localStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                localStorage.setItem('token', response.data.token);
                 navigate('/');
             }
         } catch (err) {
