@@ -21,8 +21,12 @@ const Dashboard = () => {
     useEffect(() => {
         // Load User Profile from Session
         const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+        if (storedUser && storedUser !== 'undefined') {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (e) {
+                // Ignore parse error
+            }
         }
 
         // Fetch Live Statistics

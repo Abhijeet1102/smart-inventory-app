@@ -52,11 +52,12 @@ const Payments = () => {
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
-        const storedMethods = localStorage.getItem('paymentMethods');
-        
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
+        if (storedUser && storedUser !== 'undefined') {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (e) {
+                // Handle parse error
+            }
         }
     }, []);
 

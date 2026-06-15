@@ -4,7 +4,17 @@ import { User, LogOut, Mail, Phone, Shield, ChevronDown, Package, Settings, Cred
 
 const Layout = () => {
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    let user = {};
+    try {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser && storedUser !== 'undefined') {
+            user = JSON.parse(storedUser);
+        }
+    } catch (e) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+    }
 
     const handleLogout = () => {
         localStorage.removeItem('user');

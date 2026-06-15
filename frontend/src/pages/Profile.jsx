@@ -16,13 +16,17 @@ const Profile = () => {
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
-            setName(parsedUser.name || '');
-            setEmail(parsedUser.email || '');
-            setMobileNumber(parsedUser.mobileNumber || '');
-            setAddress(parsedUser.address || '');
+        if (storedUser && storedUser !== 'undefined') {
+            try {
+                const parsedUser = JSON.parse(storedUser);
+                setUser(parsedUser);
+                setName(parsedUser.name || '');
+                setEmail(parsedUser.email || '');
+                setMobileNumber(parsedUser.mobileNumber || '');
+                setAddress(parsedUser.address || '');
+            } catch (e) {
+                console.error('Failed to parse user from localStorage', e);
+            }
         }
     }, []);
 
