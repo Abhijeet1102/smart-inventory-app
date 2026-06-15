@@ -218,7 +218,7 @@ const Dashboard = () => {
                 <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 flex flex-col">
                     <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
                     <div className="space-y-4 flex-1">
-                        <Link to="/orders" className="flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 border border-blue-100 rounded-2xl group transition-all">
+                        <Link to="/dashboard/orders" className="flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 border border-blue-100 rounded-2xl group transition-all">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-md">
                                     <ShoppingCart size={20} />
@@ -231,7 +231,7 @@ const Dashboard = () => {
                             <ArrowRight size={20} className="text-blue-400 group-hover:translate-x-1 transition-transform" />
                         </Link>
                         
-                        <Link to="/products" className="flex items-center justify-between p-4 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-2xl group transition-all">
+                        <Link to="/dashboard/products" className="flex items-center justify-between p-4 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-2xl group transition-all">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-md">
                                     <PlusCircle size={20} />
@@ -244,7 +244,7 @@ const Dashboard = () => {
                             <ArrowRight size={20} className="text-emerald-400 group-hover:translate-x-1 transition-transform" />
                         </Link>
 
-                        <Link to="/customers" className="flex items-center justify-between p-4 bg-purple-50 hover:bg-purple-100 border border-purple-100 rounded-2xl group transition-all">
+                        <Link to="/dashboard/customers" className="flex items-center justify-between p-4 bg-purple-50 hover:bg-purple-100 border border-purple-100 rounded-2xl group transition-all">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-purple-600 text-white rounded-xl flex items-center justify-center shadow-md">
                                     <Users size={20} />

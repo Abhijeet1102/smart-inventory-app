@@ -27,7 +27,7 @@ const Login = () => {
                 const response = await api.post('/auth/login', { email, password });
                 localStorage.setItem('user', JSON.stringify(response.data.user));
                 localStorage.setItem('token', response.data.token);
-                navigate('/');
+                navigate('/dashboard');
             } else {
                 // Signup Flow
                 const payload = { name, email, mobileNumber, address, password };
@@ -35,7 +35,7 @@ const Login = () => {
                 // After successful signup, log them in automatically
                 localStorage.setItem('user', JSON.stringify(response.data.user));
                 localStorage.setItem('token', response.data.token);
-                navigate('/');
+                navigate('/dashboard');
             }
         } catch (err) {
             setError(err.response?.data || 'An error occurred. Please try again.');

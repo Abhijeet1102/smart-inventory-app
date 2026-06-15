@@ -36,15 +36,15 @@ const Layout = () => {
                     </h1>
                 </div>
                 <nav className="mt-6">
-                    <Link to="/" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Dashboard</Link>
+                    <Link to="/dashboard" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Dashboard</Link>
                     {user.userRole === 'SuperAdmin' && (
-                        <Link to="/users" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Users</Link>
+                        <Link to="/dashboard/users" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Users</Link>
                     )}
-                    <Link to="/categories" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Categories</Link>
-                    <Link to="/products" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Products</Link>
-                    <Link to="/customers" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Customers</Link>
-                    <Link to="/orders" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Orders</Link>
-                    <Link to="/view-orders" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">View Orders</Link>
+                    <Link to="/dashboard/categories" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Categories</Link>
+                    <Link to="/dashboard/products" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Products</Link>
+                    <Link to="/dashboard/customers" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Customers</Link>
+                    <Link to="/dashboard/orders" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">Manage Orders</Link>
+                    <Link to="/dashboard/view-orders" className="block py-3 px-6 text-gray-600 hover:bg-blue-50 hover:text-blue-600">View Orders</Link>
                 </nav>
             </div>
 
@@ -104,13 +104,13 @@ const Layout = () => {
 
                                 {/* Actions */}
                                 <div className="p-3 border-t border-gray-100 bg-gray-50/50 rounded-b-3xl space-y-1">
-                                    <Link to="/profile" className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 font-bold rounded-xl hover:bg-gray-100 transition-colors">
+                                    <Link to="/dashboard/profile" className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 font-bold rounded-xl hover:bg-gray-100 transition-colors">
                                         <User size={16} className="text-gray-500" /> Edit Profile
                                     </Link>
-                                    <Link to="/settings" className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 font-bold rounded-xl hover:bg-gray-100 transition-colors">
+                                    <Link to="/dashboard/settings" className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 font-bold rounded-xl hover:bg-gray-100 transition-colors">
                                         <Settings size={16} className="text-gray-500" /> Settings
                                     </Link>
-                                    <Link to="/payments" className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 font-bold rounded-xl hover:bg-gray-100 transition-colors">
+                                    <Link to="/dashboard/payments" className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 font-bold rounded-xl hover:bg-gray-100 transition-colors">
                                         <CreditCard size={16} className="text-gray-500" /> Payments
                                     </Link>
                                     <div className="h-px bg-gray-200 my-2"></div>
