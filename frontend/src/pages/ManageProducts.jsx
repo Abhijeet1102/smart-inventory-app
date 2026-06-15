@@ -17,6 +17,7 @@ const ManageProducts = () => {
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [categoryId, setCategoryId] = useState('');
+    const [imageBase64, setImageBase64] = useState('');
     const [editingId, setEditingId] = useState(null);
     
     // UI States
@@ -62,7 +63,7 @@ const ManageProducts = () => {
             return;
         }
 
-        const payload = { name, quantity: parseInt(quantity), price: parseInt(price), description, categoryId };
+        const payload = { name, quantity: parseInt(quantity), price: parseInt(price), description, categoryId, imageBase64 };
         const loadToast = toast.loading(editingId ? 'Updating product...' : 'Creating product...');
         
         try {
@@ -87,6 +88,7 @@ const ManageProducts = () => {
         setPrice('');
         setDescription('');
         setCategoryId('');
+        setImageBase64('');
         setEditingId(null);
     };
 
@@ -96,8 +98,45 @@ const ManageProducts = () => {
         setPrice(product.price);
         setDescription(product.description);
         setCategoryId(product.categoryId);
+        setImageBase64(product.imageBase64 || '');
         setEditingId(product.id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 300;
+                const MAX_HEIGHT = 300;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                setImageBase64(canvas.toDataURL('image/jpeg', 0.7));
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleDelete = async (id) => {
@@ -295,6 +334,32 @@ const ManageProducts = () => {
                                     rows="2"
                                 ></textarea>
                             </div>
+
+                            <div>
+                                <label className="block text-gray-700 text-sm font-bold mb-1 flex items-center gap-1.5">
+                                    <AlertCircle size={16} className="text-indigo-500" /> Product Image (Optional)
+                                </label>
+                                <div className="flex items-center gap-4 mt-2">
+                                    {imageBase64 && (
+                                        <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden border-2 border-indigo-100 shadow-sm relative group">
+                                            <img src={imageBase64} alt="Preview" className="w-full h-full object-cover" />
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setImageBase64('')}
+                                                className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <X size={20} />
+                                            </button>
+                                        </div>
+                                    )}
+                                    <input 
+                                        type="file" 
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors cursor-pointer"
+                                    />
+                                </div>
+                            </div>
                             
                             <div className="flex gap-3 pt-3 border-t border-gray-100">
                                 <button 
@@ -405,9 +470,18 @@ const ManageProducts = () => {
                                                     #{index + 1}
                                                 </td>
                                                 <td className="py-4 px-6">
-                                                    <div className="flex flex-col">
-                                                        <span className="font-bold text-gray-900 text-base">{prod.name}</span>
-                                                        <span className="text-xs text-indigo-500 font-bold mt-0.5 tracking-wide uppercase">{getCategoryName(prod.categoryId)}</span>
+                                                    <div className="flex items-center gap-3">
+                                                        {prod.imageBase64 ? (
+                                                            <img src={prod.imageBase64} alt={prod.name} className="w-10 h-10 rounded-lg object-cover shadow-sm border border-gray-200 shrink-0" />
+                                                        ) : (
+                                                            <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center font-bold shadow-sm shrink-0">
+                                                                {prod.name ? prod.name.charAt(0).toUpperCase() : 'P'}
+                                                            </div>
+                                                        )}
+                                                        <div className="flex flex-col">
+                                                            <span className="font-bold text-gray-900 text-base">{prod.name}</span>
+                                                            <span className="text-xs text-indigo-500 font-bold mt-0.5 tracking-wide uppercase">{getCategoryName(prod.categoryId)}</span>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td className="py-4 px-6 text-center">

@@ -20,4 +20,5 @@ public class Product {
     private Integer price;
     private String description;
     private String categoryId;
+    private String imageBase64;
 }

@@ -4,7 +4,7 @@ import api from '../services/api';
 import { 
     Package, ShoppingCart, Users, IndianRupee, AlertTriangle, 
     TrendingUp, Activity, Phone, MapPin, Mail, ShieldCheck,
-    PlusCircle, ArrowRight
+    PlusCircle, ArrowRight, Search
 } from 'lucide-react';
 
 const Dashboard = () => {
@@ -14,9 +14,10 @@ const Dashboard = () => {
         totalCustomers: 0,
         totalOrders: 0,
         totalRevenue: 0,
-        lowStockProducts: []
+        allProducts: []
     });
     const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         // Load User Profile from Session
@@ -181,19 +182,34 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Live Inventory Tracking */}
-                <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="bg-blue-50 p-6 border-b border-blue-100 flex items-center justify-between">
+                <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col max-h-[500px]">
+                    <div className="bg-blue-50 p-6 border-b border-blue-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shrink-0">
                         <div>
                             <h3 className="text-xl font-bold text-blue-900 flex items-center gap-2">
                                 <Package size={24} /> Live Inventory Tracking
                             </h3>
                             <p className="text-blue-700/80 text-sm mt-1">Real-time product quantities in stock</p>
                         </div>
-                        <div className="bg-blue-100 text-blue-800 font-bold px-4 py-2 rounded-xl text-sm">
-                            {stats.allProducts?.length || 0} Products
+                        
+                        <div className="flex items-center gap-3 w-full sm:w-auto">
+                            <div className="relative w-full sm:w-56">
+                                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400" />
+                                <input 
+                                    type="text" 
+                                    placeholder="Search products..." 
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full pl-9 pr-4 py-2 rounded-xl border border-blue-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                                />
+                            </div>
+                            <div className="bg-blue-100 text-blue-800 font-bold px-4 py-2 rounded-xl text-sm shrink-0">
+                                {stats.allProducts?.length || 0} Total
+                            </div>
                         </div>
                     </div>
-                    <div className="p-0">
+                    
+                    {/* List Container with Scroll */}
+                    <div className="p-0 overflow-y-auto flex-1">
                         {stats.allProducts?.length === 0 ? (
                             <div className="p-10 text-center">
                                 <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -203,13 +219,17 @@ const Dashboard = () => {
                                 <p className="text-gray-500 text-sm">Add some products to track their stock here.</p>
                             </div>
                         ) : (
-                            <ul className="divide-y divide-gray-50 max-h-80 overflow-y-auto">
-                                {stats.allProducts?.map(product => (
+                            <ul className="divide-y divide-gray-50">
+                                {stats.allProducts?.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase())).map(product => (
                                     <li key={product.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
                                         <div className="flex items-center gap-4">
-                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg shadow-sm ${product.quantity < 10 ? 'bg-red-100 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
-                                                {product.name ? product.name.charAt(0).toUpperCase() : 'P'}
-                                            </div>
+                                            {product.imageBase64 ? (
+                                                <img src={product.imageBase64} alt={product.name} className="w-12 h-12 rounded-lg object-cover shadow-sm border border-gray-200 shrink-0" />
+                                            ) : (
+                                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center font-bold text-lg shadow-sm shrink-0 ${product.quantity < 10 ? 'bg-red-100 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
+                                                    {product.name ? product.name.charAt(0).toUpperCase() : 'P'}
+                                                </div>
+                                            )}
                                             <div>
                                                 <p className="font-bold text-gray-900">{product.name}</p>
                                                 <p className="text-xs text-gray-500">Category: {product.categoryName}</p>
