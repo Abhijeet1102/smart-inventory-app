@@ -20,7 +20,19 @@ const ManageOrders = () => {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [paymentStep, setPaymentStep] = useState('SELECT'); // 'SELECT', 'CASH', 'UPI', 'CARD'
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-    const [merchantUpiId, setMerchantUpiId] = useState('');
+    const [merchantUpiId, setMerchantUpiId] = useState(() => {
+        try {
+            const methods = JSON.parse(localStorage.getItem('paymentMethods') || '[]');
+            const selectedId = JSON.parse(localStorage.getItem('selectedUpiId') || 'null');
+            if (methods && selectedId) {
+                const method = methods.find(m => m.id === selectedId && m.type === 'UPI');
+                if (method) return method.detail;
+            }
+            const fallbackMethod = methods.find(m => m.type === 'UPI');
+            if (fallbackMethod) return fallbackMethod.detail;
+        } catch(e) {}
+        return '';
+    });
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
     const [customerSearch, setCustomerSearch] = useState('');
@@ -617,17 +629,6 @@ const ManageOrders = () => {
                             {/* UPI VIEW */}
                             {paymentStep === 'UPI' && (
                                 <div className="animate-in fade-in slide-in-from-right-4 duration-300 text-center">
-                                    <div className="mb-4 text-left">
-                                        <label className="block text-gray-700 text-sm font-bold mb-1">Receiver UPI ID</label>
-                                        <input 
-                                            type="text" 
-                                            value={merchantUpiId}
-                                            onChange={(e) => setMerchantUpiId(e.target.value)}
-                                            placeholder="e.g. mobilenumber@upi"
-                                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-50"
-                                        />
-                                    </div>
-                                    
                                     <p className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wider">Scan to Pay</p>
                                     
                                     {merchantUpiId.trim() ? (
@@ -639,11 +640,15 @@ const ManageOrders = () => {
                                                     className="w-48 h-48 rounded-xl"
                                                 />
                                             </div>
-                                            <p className="text-gray-500 text-sm mb-6 px-4 font-medium">Ask the customer to scan this QR code to pay ₹{calculateTotal().toLocaleString()} directly to {merchantUpiId}</p>
+                                            <p className="text-gray-500 text-sm mb-6 px-4 font-medium">
+                                                Receiving at <strong>{merchantUpiId}</strong><br/>
+                                                Ask the customer to scan this QR code to pay ₹{calculateTotal().toLocaleString()}
+                                            </p>
                                         </>
                                     ) : (
-                                        <div className="w-48 h-48 border-2 border-dashed border-gray-200 bg-gray-50 rounded-2xl mx-auto mb-6 flex items-center justify-center text-gray-400 p-4 text-sm font-medium">
-                                            Please enter a UPI ID above to generate the QR Code.
+                                        <div className="w-64 border-2 border-dashed border-gray-200 bg-gray-50 rounded-2xl mx-auto mb-6 flex items-center justify-center text-gray-500 p-6 text-sm font-medium flex-col gap-3">
+                                            <span>No UPI ID configured.</span>
+                                            <span className="text-xs">Please add your UPI ID in the <strong>Payments</strong> section to generate a QR code.</span>
                                         </div>
                                     )}
                                     <div className="flex gap-3">
