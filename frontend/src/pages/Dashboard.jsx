@@ -48,14 +48,14 @@ const Dashboard = () => {
 
             // Calculate metrics
             const revenue = orders.reduce((sum, order) => sum + (order.totalPaid || 0), 0);
-            const lowStock = products.filter(p => p.quantity < 10);
+            const sortedProducts = [...products].sort((a, b) => a.quantity - b.quantity);
 
             setStats({
                 totalProducts: products.length,
                 totalCustomers: customers.length,
                 totalOrders: orders.length,
                 totalRevenue: revenue,
-                lowStockProducts: lowStock
+                allProducts: sortedProducts
             });
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
@@ -169,34 +169,34 @@ const Dashboard = () => {
             {/* 3. Alerts & Quick Actions */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                {/* Low Stock Alerts */}
+                {/* Live Inventory Tracking */}
                 <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="bg-red-50 p-6 border-b border-red-100 flex items-center justify-between">
+                    <div className="bg-blue-50 p-6 border-b border-blue-100 flex items-center justify-between">
                         <div>
-                            <h3 className="text-xl font-bold text-red-800 flex items-center gap-2">
-                                <AlertTriangle size={24} /> Low Stock Alerts
+                            <h3 className="text-xl font-bold text-blue-900 flex items-center gap-2">
+                                <Package size={24} /> Live Inventory Tracking
                             </h3>
-                            <p className="text-red-600/80 text-sm mt-1">Products with less than 10 units remaining</p>
+                            <p className="text-blue-700/80 text-sm mt-1">Real-time product quantities in stock</p>
                         </div>
-                        <div className="bg-red-100 text-red-700 font-bold px-4 py-2 rounded-xl text-sm">
-                            {stats.lowStockProducts.length} Items
+                        <div className="bg-blue-100 text-blue-800 font-bold px-4 py-2 rounded-xl text-sm">
+                            {stats.allProducts?.length || 0} Products
                         </div>
                     </div>
                     <div className="p-0">
-                        {stats.lowStockProducts.length === 0 ? (
+                        {stats.allProducts?.length === 0 ? (
                             <div className="p-10 text-center">
-                                <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <ShieldCheck size={32} />
+                                <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <Package size={32} />
                                 </div>
-                                <h4 className="text-gray-900 font-bold text-lg">Inventory is Healthy!</h4>
-                                <p className="text-gray-500 text-sm">You have no products running out of stock.</p>
+                                <h4 className="text-gray-900 font-bold text-lg">No Products Found</h4>
+                                <p className="text-gray-500 text-sm">Add some products to track their stock here.</p>
                             </div>
                         ) : (
                             <ul className="divide-y divide-gray-50 max-h-80 overflow-y-auto">
-                                {stats.lowStockProducts.map(product => (
+                                {stats.allProducts?.map(product => (
                                     <li key={product.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 font-bold text-xs">
+                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs ${product.quantity < 10 ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
                                                 ID: {product.id}
                                             </div>
                                             <div>
@@ -205,8 +205,12 @@ const Dashboard = () => {
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-red-600 font-extrabold text-lg">{product.quantity} Left</p>
-                                            <p className="text-xs text-gray-500 font-medium">Reorder soon</p>
+                                            <p className={`font-extrabold text-lg ${product.quantity < 10 ? 'text-red-600' : 'text-emerald-600'}`}>
+                                                {product.quantity} Left
+                                            </p>
+                                            <p className="text-xs text-gray-500 font-medium">
+                                                {product.quantity < 10 ? 'Low Stock' : 'Healthy Stock'}
+                                            </p>
                                         </div>
                                     </li>
                                 ))}
