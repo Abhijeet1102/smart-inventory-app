@@ -389,7 +389,7 @@ const ManageProducts = () => {
 
                 {/* Right Column: List */}
                 <div className="xl:col-span-2 sticky top-24 self-start">
-                    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col max-h-[calc(100vh-10rem)] min-h-[500px]">
+                    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[660px]">
                         
                         {/* List Header with Search */}
                         <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0">
