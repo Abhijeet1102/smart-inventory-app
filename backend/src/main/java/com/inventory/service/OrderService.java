@@ -26,7 +26,7 @@ public class OrderService {
     private PdfService pdfService;
 
     @Transactional
-    public OrderDetails placeOrder(OrderDetails orderDetails) throws Exception {
+    public OrderDetails placeOrder(OrderDetails orderDetails, String userEmail) throws Exception {
         // Generate Order ID
         String datePart = new java.text.SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
         String randomPart = String.format("%04d", new java.util.Random().nextInt(10000));
@@ -41,7 +41,7 @@ public class OrderService {
         // Deduct quantities
         if (orderDetails.getCartItems() != null) {
             for (CartItem item : orderDetails.getCartItems()) {
-                Product product = productRepository.findById(item.getProductId())
+                Product product = productRepository.findByIdAndUserEmail(item.getProductId(), userEmail)
                         .orElseThrow(() -> new RuntimeException("Product not found: " + item.getProductId()));
                 
                 if (product.getQuantity() < item.getQuantity()) {

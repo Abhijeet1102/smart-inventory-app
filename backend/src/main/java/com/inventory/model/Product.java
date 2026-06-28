@@ -21,4 +21,5 @@ public class Product {
     private String description;
     private String categoryId;
     private String imageBase64;
+    private String userEmail;
 }

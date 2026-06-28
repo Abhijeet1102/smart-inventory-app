@@ -8,27 +8,34 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin("*")
 public class ProductController {
+
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
     @Autowired
     private ProductRepository productRepository;
 
     @GetMapping
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productRepository.findByUserEmail(getCurrentUserEmail());
     }
 
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
+        product.setUserEmail(getCurrentUserEmail());
         return productRepository.save(product);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product productDetails) {
-        return productRepository.findById(id)
+        return productRepository.findByIdAndUserEmail(id, getCurrentUserEmail())
                 .map(product -> {
                     product.setName(productDetails.getName());
                     product.setQuantity(productDetails.getQuantity());
@@ -42,7 +49,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable String id) {
-        return productRepository.findById(id)
+        return productRepository.findByIdAndUserEmail(id, getCurrentUserEmail())
                 .map(product -> {
                     productRepository.delete(product);
                     return ResponseEntity.ok().build();

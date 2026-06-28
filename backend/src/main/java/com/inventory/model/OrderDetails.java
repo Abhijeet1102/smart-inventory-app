@@ -22,4 +22,5 @@ public class OrderDetails {
     private Integer totalPaid;
     private String paymentMethod;
     private List<CartItem> cartItems;
+    private String userEmail;
 }

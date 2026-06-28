@@ -18,4 +18,5 @@ public class Customer {
     private String name;
     private String mobileNumber;
     private String email;
+    private String userEmail;
 }

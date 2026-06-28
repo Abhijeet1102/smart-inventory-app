@@ -9,10 +9,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+
 @RestController
 @RequestMapping("/api/orders")
 @CrossOrigin("*")
 public class OrderController {
+
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
@@ -22,13 +28,14 @@ public class OrderController {
 
     @GetMapping
     public List<OrderDetails> getAllOrders() {
-        return orderDetailsRepository.findAll();
+        return orderDetailsRepository.findByUserEmail(getCurrentUserEmail());
     }
 
     @PostMapping
     public ResponseEntity<?> placeOrder(@RequestBody OrderDetails orderDetails) {
         try {
-            OrderDetails savedOrder = orderService.placeOrder(orderDetails);
+            orderDetails.setUserEmail(getCurrentUserEmail());
+            OrderDetails savedOrder = orderService.placeOrder(orderDetails, getCurrentUserEmail());
             return ResponseEntity.ok(savedOrder);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
